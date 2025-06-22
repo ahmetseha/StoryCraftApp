@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import OpenAI from "openai";
 import dotenv from "dotenv";
+import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
@@ -12,11 +12,14 @@ const port = 3001;
 app.use(cors());
 app.use(express.json());
 
-// OpenAI configuration
-const openai = new OpenAI({
-  apiKey:
-    "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",
+// Test endpoint
+app.get("/", (req, res) => {
+  res.json({ message: "Hikaye API çalışıyor!" });
 });
+
+// API key'i doğrudan kullan (test için)
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 // Story generation endpoint
 app.post("/api/generate-story", async (req, res) => {
@@ -27,31 +30,32 @@ app.post("/api/generate-story", async (req, res) => {
       return res.status(400).json({ error: "Prompt is required" });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "Sen bir hikaye yazarısın. Verilen prompt'a göre yaratıcı, ilgi çekici ve akıcı hikayeler yaz. Hikayeler Türkçe olmalı ve 200-400 kelime arasında olmalı.",
+    console.log("Generating story for prompt:", prompt);
+
+    const geminiPrompt = `Sen bir hikaye yazarısın. Verilen prompt'a göre yaratıcı, ilgi çekici ve akıcı hikayeler yaz. Hikayeler Türkçe olmalı ve 200-400 kelime arasında olmalı.\n\nPrompt: ${prompt}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: geminiPrompt,
+      config: {
+        thinkingConfig: {
+          thinkingBudget: 0, // Disables thinking for faster response
         },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      max_tokens: 800,
-      temperature: 0.8,
+      },
     });
 
-    const story = completion.choices[0].message.content;
+    console.log("Response received:", response);
+    const story = response.text || "Hikaye oluşturulamadı.";
     res.json({ story });
   } catch (error) {
     console.error("Error generating story:", error);
-    res.status(500).json({ error: "Failed to generate story" });
+    res
+      .status(500)
+      .json({ error: "Failed to generate story: " + error.message });
   }
 });
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
+  console.log("Using API key:", GEMINI_API_KEY.substring(0, 10) + "...");
 });
