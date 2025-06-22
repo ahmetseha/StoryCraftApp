@@ -36,24 +36,36 @@ function App() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Hikaye Oluşturucu</h1>
-      <input
-        className={styles.input}
-        type="text"
-        placeholder="Bir hikaye fikri girin..."
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") generateStory();
-        }}
-        disabled={loading}
-      />
+
+      <div className={styles.inputContainer}>
+        <input
+          className={styles.input}
+          type="text"
+          placeholder="Bir hikaye fikri girin... (örn: uzayda kaybolan bir astronot)"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !loading) generateStory();
+          }}
+          disabled={loading}
+        />
+      </div>
+
       <button
         className={styles.button}
         onClick={generateStory}
         disabled={loading || !prompt.trim()}
       >
-        {loading ? "Oluşturuluyor..." : "Hikaye Oluştur"}
+        {loading ? (
+          <div className={styles.loading}>
+            <div className={styles.spinner}></div>
+            Oluşturuluyor...
+          </div>
+        ) : (
+          "Hikaye Oluştur"
+        )}
       </button>
+
       {story && <div className={styles.story}>{story}</div>}
     </div>
   );

@@ -8,20 +8,16 @@ dotenv.config();
 const app = express();
 const port = 3001;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Test endpoint
 app.get("/", (req, res) => {
   res.json({ message: "Hikaye API çalışıyor!" });
 });
 
-// API key'i doğrudan kullan (test için)
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-// Story generation endpoint
 app.post("/api/generate-story", async (req, res) => {
   try {
     const { prompt } = req.body;
@@ -39,7 +35,7 @@ app.post("/api/generate-story", async (req, res) => {
       contents: geminiPrompt,
       config: {
         thinkingConfig: {
-          thinkingBudget: 0, // Disables thinking for faster response
+          thinkingBudget: 0,
         },
       },
     });
