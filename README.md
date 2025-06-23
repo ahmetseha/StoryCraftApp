@@ -127,14 +127,6 @@ StoryCraft/
 - Loading spinner'ları
 - Responsive tasarım
 
-## 🤝 Katkıda Bulunma
-
-1. Fork yapın
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit yapın (`git commit -m 'Add amazing feature'`)
-4. Push yapın (`git push origin feature/amazing-feature`)
-5. Pull Request açın
-
 ## 📄 Lisans
 
 Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
@@ -147,7 +139,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 ## 📞 İletişim
 
-Proje Linki: [https://github.com/kullaniciadi/StoryCraft](https://github.com/kullaniciadi/StoryCraft)
+Proje Linki: [https://github.com/ahmetseha/story-craft](https://github.com/ahmetseha/story-craft)
 
 ---
 
